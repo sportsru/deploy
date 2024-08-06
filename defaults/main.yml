@@ -11,11 +11,8 @@ ansistrano_version_dir: "releases"
 # Full path to the releases
 ansistrano_releases_path: "{{ ansistrano_deploy_to }}/{{ ansistrano_version_dir }}"
 
-# Folder name for shared directories and files
-ansistrano_shared_dir: "shared"
-
 # Full path to the shared path folder
-ansistrano_shared_path: "{{ ansistrano_deploy_to }}/{{ ansistrano_shared_dir }}"
+ansistrano_shared_path: "{{ ansistrano_deploy_to }}/shared"
 
 # Softlink name for the current release
 ansistrano_current_dir: "current"
@@ -52,7 +49,6 @@ ansistrano_git_branch: master
 ansistrano_git_repo_tree: ""
 ansistrano_git_identity_key_path: ""
 ansistrano_git_identity_key_remote_path: ""
-ansistrano_git_identity_key_shred: true
 
 ## SVN pull strategy
 ansistrano_svn_repo: "https://svn.company.com/project"
@@ -91,4 +87,3 @@ ansistrano_unarchive_group: "default"
 ## Exclude some files or directory
 ## * is allowed (ex: *.pdf, *.docx)
 ansistrano_unarchive_exclude: []
-ansistrano_unarchive_extra_opts: []

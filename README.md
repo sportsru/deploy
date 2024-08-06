@@ -48,9 +48,9 @@ Ansistrano comes from Ansible + Capistrano, easy, isn't it?
 Ansistrano anonymous usage stats
 --------------------------------
 
-There is an optional step in Ansistrano that sends a HTTP request to our servers. Unfortunately, the metrics we can get from Ansible Galaxy are limited so this is one of the few ways we have to measure how many active users we really have.
+We have recently added an extra optional step in Ansistrano so that we can know how many people are deploying their applications with our project. Unfortunately, Ansible Galaxy does not provide any numbers on usage or downloads so this is one of the only ways we have to measure how many users we really have.
 
-We only use this data for usage statistics but anyway, if you are not comfortable with this, you can disable this extra step by setting `ansistrano_allow_anonymous_stats` to false in your playbooks.
+You can check the code we use to store your anonymous stats at [the ansistrano.com repo](https://github.com/ansistrano/ansistrano.com) and anyway, if you are not comfortable with this, you will always be able to disable this extra step by setting `ansistrano_allow_anonymous_stats` to false in your playbooks.
 
 Who is using Ansistrano?
 ------------------------
@@ -88,7 +88,6 @@ Is Ansistrano ready to be used? Here are some companies currently using it:
 * [HiringThing](https://www.hiringthing.com/)
 * [Holaluz](https://www.holaluz.com)
 * [Hosting4devs](https://hosting4devs.com)
-* [Jobbsy](https://jobbsy.dev)
 * [Jolicode](http://jolicode.com/)
 * [Kidfund](http://link.kidfund.us/github "Kidfund")
 * [Lumao SAS](https://lumao.eu)
@@ -119,8 +118,6 @@ Is Ansistrano ready to be used? Here are some companies currently using it:
 * [Wavecontrol](http://monitoring.wavecontrol.com/ca/public/demo/)
 * [WAVE Meditation](https://wavemeditation.com/)
 * [Yubl](https://yubl.me/)
-* [AmphiBee](https://amphibee.fr)
-* [Hexito](https://hexito.com)
 
 If you are also using it, please let us know via a PR to this document.
 
@@ -178,7 +175,6 @@ vars:
   ansistrano_deploy_from: "{{ playbook_dir }}/" # Where my local project is (relative or absolute path)
   ansistrano_deploy_to: "/var/www/my-app" # Base path to deploy to.
   ansistrano_version_dir: "releases" # Releases folder name
-  ansistrano_shared_dir: "shared" # Shared folder name
   ansistrano_current_dir: "current" # Softlink name. You should rarely changed it.
   ansistrano_current_via: "symlink" # Deployment strategy who code should be deployed to current path. Options are symlink or rsync
   ansistrano_keep_releases: 0 # Releases to keep after a new deployment. See "Pruning old releases".
@@ -186,7 +182,7 @@ vars:
   # Arrays of directories and files to be shared.
   # The following arrays of directories and files will be symlinked to the current release directory after the 'update-code' step and its callbacks
   # Notes:
-  # * Paths are relative to the shared directory (no starting /)
+  # * Paths are relative to the /shared directory (no starting /)
   # * If your items are in a subdirectory, write the entire path to each shared directory
   #
   # Example:
@@ -225,7 +221,6 @@ vars:
   ansistrano_git_repo_tree: "" # If specified the subtree of the repository to deploy
   ansistrano_git_identity_key_path: "" # If specified this file is copied over and used as the identity key for the git commands, path is relative to the playbook in which it is used
   ansistrano_git_identity_key_remote_path: "" # If specified this file on the remote server is used as the identity key for the git commands, remote path is absolute
-  ansistrano_git_identity_key_shred: true # Shred identity key by default but can be overloaded to false if you encounter the following issue (https://github.com/ansistrano/deploy/issues/357)
   # Optional variables, omitted by default
   ansistrano_git_refspec: ADDITIONAL_GIT_REFSPEC # Additional refspec to be used by the 'git' module. Uses the same syntax as the 'git fetch' command.
   ansistrano_git_ssh_opts: "-o StrictHostKeyChecking=no" # Additional ssh options to be used in Git
@@ -254,7 +249,7 @@ vars:
   ansistrano_s3_bucket: s3bucket
   ansistrano_s3_object: s3object.tgz # Add the _unarchive suffix to the ansistrano_deploy_via if your object is a package (ie: s3_unarchive)
   ansistrano_s3_region: eu-west-1
-  ansistrano_s3_rgw: false # must be Ansible >= 2.2. use Ceph RGW for S3 compatible cloud providers
+  ansistrano_s3_rgw: false # must be Ansible >= 2.2. use Ceph RGW (when set true, ignore ansistrano_s3_region)
   ansistrano_s3_url: http://rgw.example.com # when use Ceph RGW, set url
   # Optional variables, omitted by default
   ansistrano_s3_aws_access_key: YOUR_AWS_ACCESS_KEY

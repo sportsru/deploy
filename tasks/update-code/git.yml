@@ -50,11 +50,11 @@
 
 - name: ANSISTRANO | GIT | Shred GIT deployment key
   command: shred -f "{{ ansistrano_deploy_to }}/git_identity_key"
-  when: (ansistrano_git_identity_key_path|trim or ansistrano_git_identity_key_remote_path|trim) and ansistrano_git_identity_key_shred|bool == true
+  when: ansistrano_git_identity_key_path|trim or ansistrano_git_identity_key_remote_path|trim
 
 - name: ANSISTRANO | GIT | Set git_real_repo_tree
   set_fact:
-    ansistrano_git_real_repo_tree: "{{ ansistrano_git_repo_tree | trim | regex_replace('^[/]*', '') | regex_replace('([^/])/*$', '\\1/') | regex_replace('^[/]*$', '') }}"
+    ansistrano_git_real_repo_tree: "{{ ansistrano_git_repo_tree | trim | regex_replace('^[/]*', '') | regex_replace('[/]*$', '') }}"
 
 - name: ANSISTRANO | GIT | Create release folder
   file:
@@ -65,11 +65,11 @@
   shell: >-
            {
              git ls-files -z --with-tree="{{ ansistrano_git_branch }}" | tr '\0' '\n';
-             git submodule foreach --recursive | sed -n -e "s/^[a-zA-Z]* '\(.*\)'$/\1/p" | while read -r line; do (cd "$line"; git ls-files -z | tr "\0" "\n" | sed "s#^#$line/#"; cd $OLDPWD); done
+             git submodule foreach --recursive | sed -n -e "s/^Entering '\(.*\)'$/\1/p" | while read -r line; do (cd "$line"; git ls-files -z | tr "\0" "\n" | sed "s#^#$line/#"; cd $OLDPWD); done
            }
            | grep "^$prefix"
-           | sed "s#^$prefix##"
-           | rsync -a --files-from=- "./$prefix" {{ ansistrano_release_path.stdout }}/
+           | sed "s#^$prefix/##"
+           | rsync -a --files-from=- "./$prefix/" {{ ansistrano_release_path.stdout }}/
   args:
     chdir: "{{ ansistrano_deploy_to }}/{{ ansistrano_repo_dir }}/"
   environment:
